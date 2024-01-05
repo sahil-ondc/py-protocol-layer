@@ -10,7 +10,10 @@ from retry import retry
 from main import constant
 from main.config import get_config_by_name
 from main.logger.custom_logging import log
+from main.utils.logger import get_logger
 
+
+logger = get_logger()
 
 def MeasureTime(f):
     @wraps(f)
@@ -45,6 +48,7 @@ def requests_post(url, raw_data, headers=None):
 
 @MeasureTime
 def post_count_response_to_client(route, schema_version, payload):
+    logger.info(payload)
     client_webhook_endpoint = get_config_by_name('CLIENT_WEBHOOK_ENDPOINT')
     version = "v1" if schema_version != "1.2.0" else "v2"
 
@@ -67,10 +71,12 @@ def post_count_response_to_client(route, schema_version, payload):
 @MeasureTime
 def post_on_bg_or_bpp(url, payload, headers={}):
     log(f"Making POST call for {payload['context']['message_id']} on {url}")
+    logger.info(f"headers: {headers}, payload: {payload}, url: {url}")
     headers.update({'Content-Type': 'application/json'})
     raw_data = json.dumps(payload, separators=(',', ':'))
     response_text, status_code = requests_post(url, raw_data, headers=headers)
     log(f"Request Status: {status_code}, {response_text}")
+    logger.info(f"response: {response_text}, payload: {payload}")
     return json.loads(response_text), status_code
 
 
