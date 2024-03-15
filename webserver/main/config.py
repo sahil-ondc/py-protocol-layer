@@ -45,8 +45,8 @@ class Config:
     MAX_CONSUME_MESSAGE_TIME = int(os.getenv("MAX_CONSUME_MESSAGE_TIME", "30"))
     CONSUMER_MAX_WORKERS = int(os.getenv("CONSUMER_MAX_WORKERS", "100"))
     # MONGO_DATABASE_URL = os.getenv("MONGO_DATABASE_URL", "mongodb://localhost:27017")
-    MONGO_DATABASE_URL = "mongodb://mongo1:27017,mongo2:27018/?replicaSet=my-replica-set&readPreference=secondary"
-
+    # MONGO_DATABASE_URL = "mongodb://mongo1:27017,mongo2:27018/?replicaSet=my-replica-set&readPreference=secondary"
+    MONGO_DATABASE_URL = os.getenv("MONGO_DATABASE_URL", "mongodb://mongo:27017/sandbox_client")
 
 class DevelopmentConfig(Config):
     # uncomment the line below to use postgres
