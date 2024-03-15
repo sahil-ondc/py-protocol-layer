@@ -50,7 +50,6 @@ class Config:
 
     IS_TEST = os.getenv("IS_TEST", "False") == "True"
 
-
 class DevelopmentConfig(Config):
     # uncomment the line below to use postgres
     # SQLALCHEMY_DATABASE_URI = postgres_local_base
@@ -134,7 +133,7 @@ def get_email_config_value_for_name(config_name):
 
 
 if __name__ == '__main__':
-    os.environ["ENV"] = "dev"
+    os.environ["ENV"] = "light"
     print(get_config_by_name("DOMAIN"))
 
     os.environ["ENV"] = "prod"
