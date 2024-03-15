@@ -4,7 +4,8 @@ from main.middleware.bhasini import bhashini_translator
 from main import constant
 from main.service.common import get_bpp_response_for_message_id
 from main.service.search import get_item_catalogues, get_item_details, get_item_attributes, get_item_attribute_values, \
-    get_custom_menus, get_providers, get_locations, get_custom_menu_details, get_provider_details, get_location_details
+    get_custom_menus, get_providers, get_locations, get_custom_menu_details, get_provider_details, get_location_details, \
+    get_location_offers, get_last_request_dump
 
 response_namespace = Namespace('response', description='Response Namespace')
 
@@ -63,7 +64,7 @@ class GetCataloguesForMessageId(Resource):
 
 
         lang = request.args.get("lang")  # Get the value of the "lang" parameter from the query string
-        if lang:
+        if lang and lang != 'en':
                 translated_item = bhashini_translator(item_details, lang)
                 return translated_item, 200
         else:
@@ -158,6 +159,23 @@ class GetItemLocations(Resource):
         return get_locations(**args)
 
 
+@response_namespace.route("/location-offers")
+class GetLocationOffers(Resource):
+
+    def create_parser_with_args(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("domain", required=False)
+        parser.add_argument("provider", required=False)
+        parser.add_argument("location", required=False)
+        parser.add_argument("latitude", required=False, type=float)
+        parser.add_argument("longitude", required=False, type=float)
+        return parser.parse_args()
+
+    def get(self):
+        args = self.create_parser_with_args()
+        return get_location_offers(**args)
+
+
 @response_namespace.route("/custom-menus/<string:custom_menu_id>")
 class GetCustomMenu(Resource):
 
@@ -216,3 +234,17 @@ class GetLocation(Resource):
     def get(self):
         args = self.create_parser_with_args()
         return get_location_details(args['id'])
+
+
+@response_namespace.route("/request-dump")
+class GetLastRequestDump(Resource):
+
+    def create_parser_with_args(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("type", required=True)
+        parser.add_argument("transaction_id", required=True)
+        return parser.parse_args()
+
+    def get(self):
+        args = self.create_parser_with_args()
+        return get_last_request_dump(args['type'], args['transaction_id'])

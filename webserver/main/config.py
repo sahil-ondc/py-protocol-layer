@@ -47,6 +47,7 @@ class Config:
     # MONGO_DATABASE_URL = os.getenv("MONGO_DATABASE_URL", "mongodb://localhost:27017")
     # MONGO_DATABASE_URL = "mongodb://mongo1:27017,mongo2:27018/?replicaSet=my-replica-set&readPreference=secondary"
     MONGO_DATABASE_URL = os.getenv("MONGO_DATABASE_URL", "mongodb://mongo:27017/sandbox_client")
+    IS_TEST = os.getenv("IS_TEST", "False") == "True"
 
 class DevelopmentConfig(Config):
     # uncomment the line below to use postgres
