@@ -4,6 +4,7 @@ import requests
 
 def bhashini_translator(item, lang):
     try:
+     
         values_to_translate = []
         
         # Extract values to translate
@@ -78,11 +79,18 @@ def bhashini_translator(item, lang):
             item["item_details"]["@ondc/org/statutory_reqs_packaged_commodities"]["manufacturer_or_packer_address"]=translated_values[6]
             item["item_details"]["@ondc/org/statutory_reqs_packaged_commodities"]["common_or_generic_name_of_commodity"]=translated_values[7]
 
-        item["providers"][0]["descriptor"]["name"]=translated_values[8]
-        item["providers"][0]["descriptor"]["short_desc"]=translated_values[9]
-        item["providers"][0]["descriptor"]["long_desc"]=translated_values[10]
-        
+        if "@ondc/org/statutory_reqs_packaged_commodities" in item.get("item_details", {}):
+
+         item["providers"][0]["descriptor"]["name"]=translated_values[8]
+         item["providers"][0]["descriptor"]["short_desc"]=translated_values[9]
+         item["providers"][0]["descriptor"]["long_desc"]=translated_values[10]
+        else:
+         
+         item["providers"][0]["descriptor"]["name"]=translated_values[5]
+         item["providers"][0]["descriptor"]["short_desc"]=translated_values[6]
+         item["providers"][0]["descriptor"]["long_desc"]=translated_values[7] 
         return item 
     except Exception as error:
-        print("Error:", error)
+        print(f"Error: {error}", flush=True)
+
         return None

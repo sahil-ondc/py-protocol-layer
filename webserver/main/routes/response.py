@@ -63,7 +63,6 @@ class GetCataloguesForMessageId(Resource):
         args = self.create_parser_with_args()
         item_details = get_item_details(args['id'])  # Retrieve item details
 
-
         lang = request.args.get("lang")  # Get the value of the "lang" parameter from the query string
         if lang and lang != 'en':
                 translated_item = bhashini_translator(item_details, lang)
