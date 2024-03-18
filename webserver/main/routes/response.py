@@ -1,6 +1,7 @@
 from flask import request
 from flask_restx import Namespace, Resource, reqparse
 from main.middleware.bhasini import bhashini_translator
+from main.middleware.providerBhashini import provider_bhashini_translator
 from main import constant
 from main.service.common import get_bpp_response_for_message_id
 from main.service.search import get_item_catalogues, get_item_details, get_item_attributes, get_item_attribute_values, \
@@ -214,13 +215,22 @@ class GetCustomMenu(Resource):
 class GetProvider(Resource):
 
     def create_parser_with_args(self):
+
         parser = reqparse.RequestParser()
         parser.add_argument("id", required=True)
         return parser.parse_args()
 
     def get(self):
         args = self.create_parser_with_args()
-        return get_provider_details(args['id'])
+        provider_details = get_provider_details(args['id'])
+        lang = request.args.get("lang")  # Get the value of the "lang" parameter from the query string
+     
+        if lang and lang != 'en':
+                translated_item = provider_bhashini_translator(provider_details, lang)
+                return translated_item, 200
+        else:
+                return provider_details, 200
+        
 
 
 @response_namespace.route("/location-details")
